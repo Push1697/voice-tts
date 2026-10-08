@@ -5,3 +5,5 @@ outputs/*.mp3
 outputs/*.wav
 !outputs/history.json
 .DS_Store
+config.bat
+node_modules
