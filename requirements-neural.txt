@@ -1,0 +1,5 @@
+# Offline Neural VITS Support (Apple Silicon M4 Metal / PyTorch MPS / CUDA)
+-r requirements.txt
+torch>=2.2.0
+transformers>=4.40.0
+scipy>=1.12.0

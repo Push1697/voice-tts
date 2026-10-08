@@ -1,0 +1,38 @@
+[
+  {
+    "id": "speech_1791449831_1e5d24",
+    "filename": "speech_1791449831_1e5d24.mp3",
+    "audio_url": "/api/audio/speech_1791449831_1e5d24.mp3",
+    "text": "Hello! VaniForge is running ultra-fast speech synthesis right here on your machine.",
+    "full_text": "Hello! VaniForge is running ultra-fast speech synthesis right here on your machine.",
+    "voice_id": "en-IN-NeerjaNeural",
+    "engine": "edge",
+    "speed": 1.5,
+    "pitch": 0,
+    "volume": 100,
+    "words_count": 12,
+    "chars_count": 83,
+    "file_size_bytes": 28512,
+    "generation_time_ms": 2706.9,
+    "words_per_sec": 4.4,
+    "created_at": "2026-10-08 14:27:13"
+  },
+  {
+    "id": "speech_1791449816_7fb85a",
+    "filename": "speech_1791449816_7fb85a.mp3",
+    "audio_url": "/api/audio/speech_1791449816_7fb85a.mp3",
+    "text": "नमस्ते! यह वाणीफोर्ज का हिंदी आवाज परीक्षण है।",
+    "full_text": "नमस्ते! यह वाणीफोर्ज का हिंदी आवाज परीक्षण है।",
+    "voice_id": "hi-IN-SwaraNeural",
+    "engine": "edge",
+    "speed": 1.25,
+    "pitch": 0,
+    "volume": 100,
+    "words_count": 8,
+    "chars_count": 46,
+    "file_size_bytes": 28080,
+    "generation_time_ms": 3359.7,
+    "words_per_sec": 2.4,
+    "created_at": "2026-10-08 14:26:59"
+  }
+]

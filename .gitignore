@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+outputs/*.mp3
+outputs/*.wav
+!outputs/history.json
+.DS_Store
