@@ -10,7 +10,8 @@ def clean_script_text(raw_text: str) -> str:
     lines = [line.strip() for line in text.splitlines() if line.strip()]
     return '\n\n'.join(lines)
 
-test_input = """Ek waqt tha… jab is aadmi ke paas na paisa tha, na koi filmi background.”
+if __name__ == "__main__":
+    test_input = """Ek waqt tha… jab is aadmi ke paas na paisa tha, na koi filmi background.”
 [3–8 sec | STRUGGLE]
 “Lekin theatre se shuru hui ek journey ne… Nana Patekar ko Bollywood ke sabse powerful actors mein khada kar diya.”
 [8–16 sec | POWER]
@@ -23,6 +24,6 @@ use itna real bana dete the, ki audience actor ko bhool jaati thi.”
 “Lekin jis struggle ne Nana ko yeh banaya…
 uski kahani shayad unki films se bhi zyada interesting hai."""
 
-cleaned = clean_script_text(test_input)
-print("=== CLEANED OUTPUT ===")
-print(cleaned)
+    cleaned = clean_script_text(test_input)
+    print("=== CLEANED OUTPUT ===")
+    print(cleaned)
