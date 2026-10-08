@@ -277,6 +277,27 @@ body {
     border-color: rgba(255, 255, 255, 0.15);
 }
 
+.preset-btn.btn-highlight {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
+    border-color: rgba(245, 158, 11, 0.4);
+    font-weight: 600;
+}
+
+.preset-btn.btn-highlight:hover {
+    background: rgba(245, 158, 11, 0.25);
+    border-color: #f59e0b;
+}
+
+.preset-btn.btn-clean {
+    color: #38bdf8;
+    border-color: rgba(56, 189, 248, 0.3);
+}
+
+.preset-btn.btn-clean:hover {
+    background: rgba(56, 189, 248, 0.15);
+}
+
 .preset-btn.btn-clear {
     margin-left: auto;
     color: #ef4444;
@@ -285,6 +306,46 @@ body {
 
 .preset-btn.btn-clear:hover {
     background: rgba(239, 68, 68, 0.15);
+}
+
+.voice-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.studio-select {
+    background: rgba(10, 15, 26, 0.85);
+    border: 1px solid var(--bg-card-border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    padding: 5px 10px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.studio-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 8px var(--primary-glow);
+}
+
+.active-voice-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(10, 15, 26, 0.8);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: var(--radius-sm);
+    padding: 8px 14px;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+}
+
+.active-voice-summary strong {
+    color: var(--text-primary);
 }
 
 /* Lang Filter Tabs */
@@ -696,6 +757,17 @@ body {
 
 .player-btn.btn-play:hover {
     transform: scale(1.08);
+}
+
+.player-btn.btn-play.pulse-glow {
+    animation: playGlow 1.4s infinite;
+    background: linear-gradient(135deg, #06b6d4, #6366f1);
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.8);
+}
+
+@keyframes playGlow {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 14px rgba(6, 182, 212, 0.6); }
+    50% { transform: scale(1.12); box-shadow: 0 0 26px rgba(6, 182, 212, 0.95); }
 }
 
 .player-actions-right {

@@ -20,6 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const charCount = document.getElementById('charCount');
     const wordCount = document.getElementById('wordCount');
     const clearTextBtn = document.getElementById('clearTextBtn');
+    const cleanScriptBtn = document.getElementById('cleanScriptBtn');
+    const quickVoiceDropdown = document.getElementById('quickVoiceDropdown');
+    const summaryVoiceName = document.getElementById('summaryVoiceName');
+    const summarySpeed = document.getElementById('summarySpeed');
     const voiceCardsContainer = document.getElementById('voiceCardsContainer');
     const langTabs = document.getElementById('langTabs');
     const speedSlider = document.getElementById('speedSlider');
@@ -57,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Presets Map
     const PRESETS = {
+        'nana-patekar': "Ek waqt tha… jab is aadmi ke paas na paisa tha, na koi filmi background.\n\nLekin theatre se shuru hui ek journey ne… Nana Patekar ko Bollywood ke sabse powerful actors mein khada kar diya.\n\nUnki khaasiyat sirf unki awaaz nahi thi… unki aankhein, unki khamoshi, aur dialogue ke beech ka woh pause—sab kuch bolta tha.\n\nWoh character ko sirf play nahi karte the… use itna real bana dete the, ki audience actor ko bhool jaati thi.\n\nLekin jis struggle ne Nana ko yeh banaya… uski kahani shayad unki films se bhi zyada interesting hai.",
         'hindi-greet': "नमस्ते! VaniForge में आपका स्वागत है। आप अपनी स्थानीय हार्डवेयर गति और आवाज़ को यहाँ नियंत्रित कर सकते हैं।",
         'hindi-tech': "कृत्रिम बुद्धिमत्ता और मशीन लर्निंग तकनीक अब आपके कंप्यूटर के हार्डवेयर पर सीधे और अत्यधिक गति से काम कर रही है।",
         'english-natural': "Welcome to VaniForge Studio! Experience ultra-fast local neural speech synthesis powered directly by your machine's hardware.",
@@ -92,9 +97,44 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!res.ok) throw new Error("Failed to load voices");
             const data = await res.json();
             allVoices = data.voices || [];
+            populateQuickDropdown();
             renderVoiceCards();
+            updateActiveSummary();
         } catch (err) {
             voiceCardsContainer.innerHTML = `<div class="empty-history" style="color:#ef4444;">Failed to load voices. Backend offline?</div>`;
+        }
+    }
+
+    function populateQuickDropdown() {
+        quickVoiceDropdown.innerHTML = '';
+        allVoices.forEach(v => {
+            const opt = document.createElement('option');
+            opt.value = v.id;
+            opt.dataset.engine = v.engine;
+            opt.textContent = `${v.name} (${v.language})`;
+            if (v.id === selectedVoiceId) opt.selected = true;
+            quickVoiceDropdown.appendChild(opt);
+        });
+    }
+
+    quickVoiceDropdown.addEventListener('change', (e) => {
+        const vId = e.target.value;
+        const found = allVoices.find(v => v.id === vId);
+        if (found) {
+            selectedVoiceId = found.id;
+            selectedEngine = found.engine;
+            renderVoiceCards();
+            updateActiveSummary();
+        }
+    });
+
+    function updateActiveSummary() {
+        const found = allVoices.find(v => v.id === selectedVoiceId);
+        if (summaryVoiceName) {
+            summaryVoiceName.textContent = found ? `${found.name} (${found.language})` : selectedVoiceId;
+        }
+        if (summarySpeed) {
+            summarySpeed.textContent = `${currentSpeed.toFixed(2)}x`;
         }
     }
 
@@ -136,6 +176,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.classList.add('selected');
                 selectedVoiceId = voice.id;
                 selectedEngine = voice.engine;
+                quickVoiceDropdown.value = voice.id;
+                updateActiveSummary();
             });
 
             voiceCardsContainer.appendChild(card);
@@ -168,6 +210,16 @@ document.addEventListener('DOMContentLoaded', () => {
         textInput.focus();
     });
 
+    // Clean Script (Strips timestamps like [3-8 sec | STRUGGLE])
+    cleanScriptBtn.addEventListener('click', () => {
+        const raw = textInput.value;
+        const cleaned = raw.replace(/\[[^\]]*\]/g, '').replace(/[“”"]/g, ' ').replace(/\n\s*\n+/g, '\n\n').trim();
+        textInput.value = cleaned;
+        updateTextStats();
+        statusIndicator.textContent = "Script cleaned! Timestamps and stage directions removed.";
+        statusIndicator.style.color = "var(--accent-cyan)";
+    });
+
     // Preset Buttons
     document.querySelectorAll('.preset-btn[data-preset]').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -175,8 +227,16 @@ document.addEventListener('DOMContentLoaded', () => {
             if (PRESETS[key]) {
                 textInput.value = PRESETS[key];
                 updateTextStats();
-                // Auto switch filter for language convenience
-                if (key.startsWith('hindi')) {
+                // Auto switch voice and filter for Nana Patekar story
+                if (key === 'nana-patekar') {
+                    selectedVoiceId = "hi-IN-MadhurNeural";
+                    selectedEngine = "edge";
+                    quickVoiceDropdown.value = "hi-IN-MadhurNeural";
+                    selectFilterTab('Hindi');
+                    updateActiveSummary();
+                    statusIndicator.textContent = "Loaded Nana Patekar script! Selected Madhur Neural voice.";
+                    statusIndicator.style.color = "var(--accent-gold)";
+                } else if (key.startsWith('hindi')) {
                     selectFilterTab('Hindi');
                 } else if (key === 'english-natural') {
                     selectFilterTab('English');
@@ -198,6 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentSpeed = parseFloat(e.target.value);
         speedValue.textContent = `${currentSpeed.toFixed(2)}x`;
         updateSpeedChips(currentSpeed);
+        updateActiveSummary();
     });
 
     speedChips.forEach(chip => {
@@ -206,6 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
             speedSlider.value = currentSpeed;
             speedValue.textContent = `${currentSpeed.toFixed(2)}x`;
             updateSpeedChips(currentSpeed);
+            updateActiveSummary();
         });
     });
 
@@ -311,8 +373,12 @@ document.addEventListener('DOMContentLoaded', () => {
             playIcon.classList.add('hidden');
             pauseIcon.classList.remove('hidden');
             visualizerOverlay.classList.add('hidden');
+            playPauseBtn.classList.remove('pulse-glow');
         }).catch(err => {
             console.warn("Autoplay policy or audio error:", err);
+            statusIndicator.textContent = "Audio ready! Click the Play button (▶) below to listen.";
+            statusIndicator.style.color = "var(--accent-cyan)";
+            playPauseBtn.classList.add('pulse-glow');
         });
     }
 

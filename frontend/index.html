@@ -74,10 +74,12 @@
                     <!-- Preset Chips -->
                     <div class="preset-chips">
                         <span class="chips-label">Presets:</span>
+                        <button type="button" class="preset-btn btn-highlight" data-preset="nana-patekar">🎬 नाना पाटेकर (Nana Patekar)</button>
                         <button type="button" class="preset-btn" data-preset="hindi-greet">🇮🇳 नमस्ते (Hindi)</button>
                         <button type="button" class="preset-btn" data-preset="hindi-tech">🚀 तकनीक (AI Hindi)</button>
                         <button type="button" class="preset-btn" data-preset="english-natural">🇬🇧 Studio English</button>
                         <button type="button" class="preset-btn" data-preset="hinglish">✨ Hinglish Mix</button>
+                        <button type="button" class="preset-btn btn-clean" id="cleanScriptBtn" title="Remove stage cues and bracketed timestamps like [3-8 sec]">🧹 Clean Script</button>
                         <button type="button" class="preset-btn btn-clear" id="clearTextBtn">✕ Clear</button>
                     </div>
                 </div>
@@ -85,7 +87,12 @@
                 <!-- Voice Selection Section -->
                 <div class="section-block">
                     <div class="block-header">
-                        <span class="block-title">Voice & Language</span>
+                        <div class="voice-title-wrap">
+                            <span class="block-title">Select Voice</span>
+                            <select id="quickVoiceDropdown" class="studio-select" title="Quick voice selector">
+                                <!-- Populated via JS -->
+                            </select>
+                        </div>
                         <div class="lang-filter-tabs" id="langTabs">
                             <button type="button" class="tab-btn active" data-filter="all">All</button>
                             <button type="button" class="tab-btn" data-filter="Hindi">🇮🇳 Hindi</button>
@@ -143,6 +150,11 @@
 
                 <!-- Generate Action Button -->
                 <div class="action-footer">
+                    <div class="active-voice-summary" id="activeVoiceSummary">
+                        <span>🎙️ Active Voice: <strong id="summaryVoiceName">Madhur (Hindi Male)</strong></span>
+                        <span>⚡ Speed: <strong id="summarySpeed">1.00x</strong></span>
+                    </div>
+
                     <button type="button" id="synthesizeBtn" class="btn-synthesize">
                         <span class="btn-icon">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">

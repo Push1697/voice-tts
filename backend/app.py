@@ -20,6 +20,7 @@ from backend.tts_engines.hardware import get_system_telemetry
 from backend.tts_engines.edge_engine import EDGE_VOICES, generate_edge_speech
 from backend.tts_engines.system_engine import get_system_voices, generate_system_speech
 from backend.tts_engines.mms_engine import MMS_VOICES, is_torch_available, generate_mms_speech, get_compute_device
+from backend.utils import clean_script_text
 
 OUTPUT_DIR = BASE_DIR / "outputs"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -107,7 +108,9 @@ async def synthesize_speech(req: SynthesizeRequest):
     """
     Synthesizes speech from text using the chosen engine, voice, and speed parameters.
     """
-    text_stripped = req.text.strip()
+    text_stripped = clean_script_text(req.text).strip()
+    if not text_stripped:
+        text_stripped = req.text.strip()
     if not text_stripped:
         raise HTTPException(status_code=400, detail="Text cannot be empty.")
 
@@ -199,20 +202,20 @@ async def synthesize_speech(req: SynthesizeRequest):
         "metadata": item_meta
     }
 
-@app.get("/api/audio/{filename}")
-async def get_audio_file(filename: str):
-    """Streams generated audio file."""
-    # Sanitize filename
-    safe_filename = os.path.basename(filename)
-    file_path = OUTPUT_DIR / safe_filename
-    if not file_path.exists():
+@app.get("/api/audio/{filepath:path}")
+async def get_audio_file(filepath: str):
+    """Streams generated audio file securely from OUTPUT_DIR."""
+    target_path = (OUTPUT_DIR / filepath).resolve()
+    if not str(target_path).startswith(str(OUTPUT_DIR.resolve())):
+        raise HTTPException(status_code=403, detail="Access denied")
+    if not target_path.exists() or not target_path.is_file():
         raise HTTPException(status_code=404, detail="Audio file not found")
         
-    media_type = "audio/wav" if safe_filename.endswith(".wav") else "audio/mpeg"
+    media_type = "audio/wav" if target_path.suffix.lower() == ".wav" else "audio/mpeg"
     return FileResponse(
-        path=str(file_path),
+        path=str(target_path),
         media_type=media_type,
-        filename=safe_filename
+        filename=target_path.name
     )
 
 @app.get("/api/history")
